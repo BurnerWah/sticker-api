@@ -16,10 +16,9 @@ app.get('/sticker/:name', async (ctx) => {
   const character = ctx.req.header('X-Sticker-Character')
   let { name } = ctx.req.param()
 
-  const sticker_alias = STICKER_ALIASES.get(`${character}:${name}`)
-  await sticker_alias.then((alias) => {
-    if (alias) name = alias
-  })
+  name = await STICKER_ALIASES.get(`${character}:${name}`).then(
+    (alias: string | null) => alias || name,
+  )
 
   const image = await STICKERS_R2.get(`${character}:${name}.webp`)
   if (image) {
@@ -73,15 +72,13 @@ app.get('/sticker/:character/:sticker', async (ctx) => {
 
   let { character, sticker } = ctx.req.param()
 
-  const character_alias = NAME_ALIASES.get(character)
-  await character_alias.then((alias) => {
-    if (alias) character = alias
-  })
+  character = await getCharacterAlaias(character).then(
+    (alias: string | null) => alias || character,
+  )
 
-  const sticker_alias = STICKER_ALIASES.get(`${character}:${sticker}`)
-  await sticker_alias.then((alias) => {
-    if (alias) sticker = alias
-  })
+  sticker = await STICKER_ALIASES.get(`${character}:${sticker}`).then(
+    (alias: string | null) => alias || sticker,
+  )
 
   const image = await STICKERS_R2.get(`${character}:${sticker}.webp`)
   if (image) {
