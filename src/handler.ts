@@ -2,21 +2,18 @@ import { Hono } from 'hono'
 import { etag } from 'hono/etag'
 import { logger } from 'hono/logger'
 import { prettyJSON } from 'hono/pretty-json'
+import { getCharacterAlaias, getStickerAlias } from './stores'
 
 const app = new Hono()
 
 app.use('*', etag(), logger(), prettyJSON())
-
-function getCharacterAlaias(character: string) {
-  return NAME_ALIASES.get(character)
-}
 
 // Special API route to assist with site-level support
 app.get('/sticker/:name', async (ctx) => {
   const character = ctx.req.header('X-Sticker-Character')
   let { name } = ctx.req.param()
 
-  name = await STICKER_ALIASES.get(`${character}:${name}`).then(
+  name = await getStickerAlias(character, name).then(
     (alias: string | null) => alias || name,
   )
 
@@ -76,7 +73,7 @@ app.get('/sticker/:character/:sticker', async (ctx) => {
     (alias: string | null) => alias || character,
   )
 
-  sticker = await STICKER_ALIASES.get(`${character}:${sticker}`).then(
+  sticker = await getStickerAlias(character, sticker).then(
     (alias: string | null) => alias || sticker,
   )
 
