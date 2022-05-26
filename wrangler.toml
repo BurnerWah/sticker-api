@@ -1,0 +1,18 @@
+name = "sticker-api"
+type = "javascript"
+zone_id = ""
+account_id = ""
+route = ""
+workers_dev = true
+compatibility_date = "2022-05-25"
+r2_buckets = [
+    { binding = "STICKERS_R2", bucket_name = "stickers", preview_bucket_name = "stickers" },
+]
+kv_namespaces = [
+    { binding = "NAME_ALIASES", id = "a7895bb6646d4f94bd59fce679cfdee8", preview_id = "a7895bb6646d4f94bd59fce679cfdee8" },
+]
+
+[build]
+command = "npm install && npm run build"
+[build.upload]
+format = "service-worker"

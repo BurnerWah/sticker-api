@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "wix.vscode-import-cost",
+    "orta.vscode-jest",
+    "steoates.autoimport",
+    "bungcip.better-toml",
+    "dbaeumer.vscode-eslint",
+    "eg2.vscode-npm-script",
+    "christian-kohler.npm-intellisense",
+    "esbenp.prettier-vscode",
+    "emilylilylime.vscode-test-explorer-diagnostics",
+    "hbenl.vscode-test-explorer",
+    "ms-vscode.test-adapter-converter"
+  ]
+}
