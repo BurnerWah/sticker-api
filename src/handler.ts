@@ -1,10 +1,15 @@
 import { Hono } from 'hono'
 import { etag } from 'hono/etag'
 import { logger } from 'hono/logger'
+import { prettyJSON } from 'hono/pretty-json'
 
 const app = new Hono()
 
-app.use('*', etag(), logger())
+app.use('*', etag(), logger(), prettyJSON())
+
+function getCharacterAlaias(character: string) {
+  return NAME_ALIASES.get(character)
+}
 
 // Special API route to assist with site-level support
 app.get('/sticker/:name', async (ctx) => {
@@ -25,6 +30,40 @@ app.get('/sticker/:name', async (ctx) => {
     })
   }
   return ctx.text('Not found', 404)
+})
+
+app.get('/sticker/:character/details', async (ctx) => {
+  let { character } = ctx.req.param()
+  character = await getCharacterAlaias(character).then(
+    (alias: string | null) => alias || character,
+  )
+  const fname_re = new RegExp(`^${character}:(.+?)\\.webp$`)
+
+  const metadata: PackMetadata = await PACK_METADATA.get(character).then(
+    (metadata: string | null) => (metadata ? JSON.parse(metadata) : {}),
+  )
+
+  const stickers = await STICKERS_R2.list({
+    prefix: `${character}:`,
+  }).then((R2s: R2Objects | null) =>
+    (R2s?.objects || []).map((R2: R2Object) => R2.key.replace(fname_re, '$1')),
+  )
+
+  const shown_stickers = stickers.filter(
+    (s: string) => !(metadata.nsfwStickers || []).includes(s),
+  )
+
+  return ctx.json(
+    {
+      stickers: shown_stickers,
+    },
+    undefined,
+    {
+      // Cache hits for two weeks since while this will change occasionally,
+      // it won't change very often.
+      'Cache-Control': 'public, max-age=1209600',
+    },
+  )
 })
 
 // Primary API route
