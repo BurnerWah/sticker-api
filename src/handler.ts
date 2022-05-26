@@ -9,7 +9,13 @@ app.use('*', etag(), logger())
 // Special API route to assist with site-level support
 app.get('/sticker/:name', async (ctx) => {
   const character = ctx.req.header('X-Sticker-Character')
-  const { name } = ctx.req.param()
+  let { name } = ctx.req.param()
+
+  const sticker_alias = STICKER_ALIASES.get(`${character}:${name}`)
+  await sticker_alias.then((alias) => {
+    if (alias) name = alias
+  })
+
   const image = await STICKERS_R2.get(`${character}:${name}.webp`)
   if (image) {
     return ctx.body(image.body, 200, {
@@ -26,13 +32,16 @@ app.get('/sticker/:character/:sticker', async (ctx) => {
   const header_char = ctx.req.header('X-Sticker-Character')
   if (header_char) return ctx.text('No', 403)
 
-  let character = ctx.req.param('character')
+  let { character, sticker } = ctx.req.param()
+
   const character_alias = NAME_ALIASES.get(character)
-
-  const sticker = ctx.req.param('sticker')
-
   await character_alias.then((alias) => {
     if (alias) character = alias
+  })
+
+  const sticker_alias = STICKER_ALIASES.get(`${character}:${sticker}`)
+  await sticker_alias.then((alias) => {
+    if (alias) sticker = alias
   })
 
   const image = await STICKERS_R2.get(`${character}:${sticker}.webp`)

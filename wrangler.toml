@@ -10,6 +10,7 @@ r2_buckets = [
 ]
 kv_namespaces = [
     { binding = "NAME_ALIASES", id = "a7895bb6646d4f94bd59fce679cfdee8", preview_id = "a7895bb6646d4f94bd59fce679cfdee8" },
+    { binding = "STICKER_ALIASES", id = "b22b923745e047a78c3846c1f439fe34", preview_id = "b22b923745e047a78c3846c1f439fe34" },
 ]
 
 [build]
