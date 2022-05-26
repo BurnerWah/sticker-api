@@ -1,7 +1,7 @@
 {
-  "name": "worker-typescript-template",
+  "name": "sticker-api",
   "version": "1.0.0",
-  "description": "Cloudflare worker TypeScript template",
+  "description": "Simple API to get stickers from a cloudflare r2 store",
   "main": "dist/worker.js",
   "scripts": {
     "build": "webpack",
