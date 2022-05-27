@@ -4,7 +4,7 @@
  * @param {string} character - The character to get the alias for.
  * @returns A promise that resolves to a string or null.
  */
-export function getCharacterAlaias(character: string): Promise<string | null> {
+export function getCharacterAlias(character: string): Promise<string | null> {
   return NAME_ALIASES.get(character)
 }
 

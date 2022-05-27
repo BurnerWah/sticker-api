@@ -3,7 +3,7 @@ import { cors } from 'hono/cors'
 import { etag } from 'hono/etag'
 import { logger } from 'hono/logger'
 import { prettyJSON } from 'hono/pretty-json'
-import { getCharacterAlaias, getStickerAlias } from './stores'
+import { getCharacterAlias, getStickerAlias } from './stores'
 
 const app = new Hono()
 
@@ -39,7 +39,7 @@ app.get('/sticker/:name', async (ctx) => {
 
 app.get('/sticker/:character/details', async (ctx) => {
   let { character } = ctx.req.param()
-  character = await getCharacterAlaias(character).then(
+  character = await getCharacterAlias(character).then(
     (alias: string | null) => alias || character,
   )
   const fname_re = new RegExp(`^${character}:(.+?)\\.webp$`)
@@ -79,7 +79,7 @@ app.get('/sticker/:character/:sticker', async (ctx) => {
 
   let { character, sticker } = ctx.req.param()
 
-  character = await getCharacterAlaias(character).then(
+  character = await getCharacterAlias(character).then(
     (alias: string | null) => alias || character,
   )
 
