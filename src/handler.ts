@@ -1,4 +1,5 @@
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
 import { etag } from 'hono/etag'
 import { logger } from 'hono/logger'
 import { prettyJSON } from 'hono/pretty-json'
@@ -6,9 +7,17 @@ import { getCharacterAlaias, getStickerAlias } from './stores'
 
 const app = new Hono()
 
-app.use('*', etag(), logger(), prettyJSON())
+app.use('*', etag(), logger(), prettyJSON(), cors({ origin: '*' }))
 
 // Special API route to assist with site-level support
+app.use(
+  '/sticker/:name',
+  cors({
+    origin: '*',
+    allowHeaders: ['X-Sticker-Character'],
+    allowMethods: ['GET', 'HEAD'],
+  }),
+)
 app.get('/sticker/:name', async (ctx) => {
   const character = ctx.req.header('X-Sticker-Character')
   let { name } = ctx.req.param()
