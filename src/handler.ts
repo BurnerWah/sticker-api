@@ -72,6 +72,28 @@ app.get('/sticker/:character/details', async (ctx) => {
   )
 })
 
+app.get('/sticker/:character/list', async (ctx) => {
+  const orig_character = ctx.req.param('character')
+  const character = await getCharacterAlias(orig_character).then(
+    (alias: string | null) => alias || orig_character,
+  )
+  const fname_re = new RegExp(`^${character}:(.+?)\\.webp$`)
+  const kv_re = new RegExp(`^${character}:(.+?)$`)
+
+  const real_stickers = await STICKERS_R2.list({
+    prefix: `${character}:`,
+  }).then((R2s: R2Objects | null) =>
+    (R2s?.objects || []).map((R2: R2Object) => R2.key.replace(fname_re, '$1')),
+  )
+
+  const alias_data = await STICKER_ALIASES.list({ prefix: `${character}:` })
+  const alias_names = alias_data.keys.map((k) => k.name)
+  const aliases = alias_names.map((name: string) => name.replace(kv_re, '$1'))
+
+  const stickers = [...real_stickers, ...aliases]
+  return ctx.json(stickers.sort())
+})
+
 // Primary API route
 app.get('/sticker/:character/:sticker', async (ctx) => {
   const header_char = ctx.req.header('X-Sticker-Character')
