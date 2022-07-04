@@ -91,7 +91,11 @@ app.get('/sticker/:character/list', async (ctx) => {
   const aliases = alias_names.map((name: string) => name.replace(kv_re, '$1'))
 
   const stickers = [...real_stickers, ...aliases]
-  return ctx.json(stickers.sort())
+  return ctx.json(stickers.sort(), undefined, {
+    // Cache hits for two weeks since while this will change occasionally,
+    // it won't change very often.
+    'Cache-Control': 'public, max-age=1209600',
+  })
 })
 
 // Primary API route
