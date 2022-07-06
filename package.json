@@ -37,6 +37,6 @@
     "webpack-cli": "^4.10.0"
   },
   "dependencies": {
-    "hono": "^1.5.2"
+    "hono": "^1.6.2"
   }
 }
