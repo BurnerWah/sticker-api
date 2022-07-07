@@ -1,3 +1,1 @@
-{
-  "jest.jestCommandLine": "node_modules/.bin/jest --config jestconfig.json --verbose"
-}
+{}
