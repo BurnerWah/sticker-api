@@ -45,7 +45,7 @@ app.get('/sticker/:character/details', async (ctx) => {
     (alias: string | null) => alias || character,
   )
   const fname_re = new RegExp(`^${character}:(.+?)\\.webp$`)
-  const show_nsfw = ctx.req.query('nsfw') != null
+  const show_nsfw = ctx.req.query('nsfw') !== null
 
   const metadata: PackMetadata = await PACK_METADATA.get(character).then(
     (meta: string | null) => (meta ? JSON.parse(meta) : {}),
