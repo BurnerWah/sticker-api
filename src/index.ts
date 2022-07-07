@@ -1,3 +1,5 @@
+import app from './app'
+
 export interface Env {
   NAME_ALIASES: KVNamespace
   STICKER_ALIASES: KVNamespace
@@ -6,11 +8,7 @@ export interface Env {
 }
 
 export default {
-  async fetch(
-    request: Request,
-    env: Env,
-    ctx: ExecutionContext,
-  ): Promise<Response> {
-    return new Response('Hello World!')
+  fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+    return app.fetch(request, env, ctx)
   },
 }
