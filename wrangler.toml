@@ -1,20 +1,23 @@
 name = "sticker-api"
-type = "javascript"
-zone_id = ""
-account_id = ""
-route = ""
-workers_dev = true
-compatibility_date = "2022-05-25"
-r2_buckets = [
-    { binding = "STICKERS_R2", bucket_name = "stickers", preview_bucket_name = "stickers" },
-]
-kv_namespaces = [
-    { binding = "NAME_ALIASES", id = "a7895bb6646d4f94bd59fce679cfdee8", preview_id = "a7895bb6646d4f94bd59fce679cfdee8" },
-    { binding = "STICKER_ALIASES", id = "b22b923745e047a78c3846c1f439fe34", preview_id = "b22b923745e047a78c3846c1f439fe34" },
-    { binding = "PACK_METADATA", id = "2404d7bc91cf4e78a1cc2a5b7665c4a7", preview_id = "2404d7bc91cf4e78a1cc2a5b7665c4a7" },
-]
+main = "src/index.ts"
+compatibility_date = "2022-07-07"
 
-[build]
-command = "npm install && npm run build"
-[build.upload]
-format = "service-worker"
+[[r2_buckets]]
+binding = "STICKERS_R2"
+bucket_name = "stickers"
+preview_bucket_name = "stickers"
+
+[[kv_namespaces]]
+binding = "NAME_ALIASES"
+id = "a7895bb6646d4f94bd59fce679cfdee8"
+preview_id = "a7895bb6646d4f94bd59fce679cfdee8"
+
+[[kv_namespaces]]
+binding = "STICKER_ALIASES"
+id = "b22b923745e047a78c3846c1f439fe34"
+preview_id = "b22b923745e047a78c3846c1f439fe34"
+
+[[kv_namespaces]]
+binding = "PACK_METADATA"
+id = "2404d7bc91cf4e78a1cc2a5b7665c4a7"
+preview_id = "2404d7bc91cf4e78a1cc2a5b7665c4a7"

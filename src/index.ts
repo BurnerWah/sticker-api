@@ -1,5 +1,8 @@
-import { handleEvent } from './handler'
+import app from './app'
+import { Env } from './types'
 
-addEventListener('fetch', (event) => {
-  event.respondWith(handleEvent(event))
-})
+export default {
+  fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+    return app.fetch(request, env, ctx)
+  },
+}
