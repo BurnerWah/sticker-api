@@ -3,6 +3,7 @@ import { cors } from 'hono/cors'
 import { etag } from 'hono/etag'
 import { logger } from 'hono/logger'
 import { prettyJSON } from 'hono/pretty-json'
+import { cacheMatch } from './utils'
 
 const app = new Hono<Env>()
 
@@ -21,19 +22,34 @@ app.get('/sticker/:name', async (ctx) => {
   const character = ctx.req.header('X-Sticker-Character')
   const { name } = ctx.req.param()
 
-  const sticker = await ctx.env.STICKER_ALIASES.get(
-    `${character}:${name}`,
-  ).then((alias: string | null) => alias || name)
+  const cache = await cacheMatch(ctx, { path: `/sticker/${character}/${name}` })
+  let { res } = cache
+  const { key, store } = cache
 
-  const image = await ctx.env.STICKERS_R2.get(`${character}:${sticker}.webp`)
-  if (image) {
-    return ctx.body(image.body, 200, {
-      'Content-Type': 'image/webp',
-      // We cache hits for a year because for all intents and purposes, the sticker
-      'Cache-Control': 'public, max-age=31536000',
-    })
+  if (!res) {
+    const sticker = await ctx.env.STICKER_ALIASES.get(
+      `${character}:${name}`,
+    ).then((alias: string | null) => alias || name)
+
+    const image = await ctx.env.STICKERS_R2.get(`${character}:${sticker}.webp`)
+    if (image) {
+      res = ctx.body(image.body, 200, {
+        'Content-Type': 'image/webp',
+        // We cache hits for a year because for all intents and purposes, the sticker
+        'Cache-Control': 'public, max-age=31536000, s-maxage=604800',
+      })
+    } else {
+      res = ctx.text('Not found', 404, {
+        'Cache-Control': 's-maxage=3600',
+      })
+    }
+
+    ctx.executionCtx.waitUntil(store.put(key, res))
+  } else {
+    console.log('cache hit')
   }
-  return ctx.text('Not found', 404)
+
+  return res
 })
 
 app.get('/sticker/:character/details', async (ctx) => {
@@ -95,25 +111,42 @@ app.get('/sticker/:character/list', async (ctx) => {
 })
 
 app.get('/sticker/:character/:sticker', async (ctx) => {
-  const { NAME_ALIASES, STICKER_ALIASES, STICKERS_R2 } = ctx.env
+  const cache = await cacheMatch(ctx)
+  let { res } = cache
+  const { key, store } = cache
+  // let res = await cacheMatch(ctx)
+  if (!res) {
+    console.log('cache miss')
 
-  let { character, sticker } = ctx.req.param()
+    const { NAME_ALIASES, STICKER_ALIASES, STICKERS_R2 } = ctx.env
 
-  character = await NAME_ALIASES.get(character).then((a) => a || character)
+    let { character, sticker } = ctx.req.param()
 
-  sticker = await STICKER_ALIASES.get(`${character}:${sticker}`).then(
-    (a) => a || sticker,
-  )
+    character = await NAME_ALIASES.get(character).then((a) => a || character)
 
-  const image = await STICKERS_R2.get(`${character}:${sticker}.webp`)
-  if (image) {
-    return ctx.body(image.body, 200, {
-      'Content-Type': 'image/webp',
-      // We cache hits for a year because for all intents and purposes, the sticker
-      'Cache-Control': 'public, max-age=31536000',
-    })
+    sticker = await STICKER_ALIASES.get(`${character}:${sticker}`).then(
+      (a) => a || sticker,
+    )
+
+    const image = await STICKERS_R2.get(`${character}:${sticker}.webp`)
+    if (image) {
+      res = ctx.body(image.body, 200, {
+        'Content-Type': 'image/webp',
+        // We cache hits for a year because for all intents and purposes, the sticker is static
+        'Cache-Control': 'public, max-age=31536000, s-maxage=604800',
+      })
+    } else {
+      res = ctx.text('Not found', 404, {
+        'Cache-Control': 's-maxage=3600',
+      })
+    }
+
+    ctx.executionCtx.waitUntil(store.put(key, res))
+  } else {
+    console.log('cache hit')
   }
-  return ctx.text('Not found', 404)
+
+  return res
 })
 
 export default app
