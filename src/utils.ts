@@ -14,5 +14,9 @@ export async function cacheMatch<T extends string>(
   const { origin, pathname } = new URL(ctx.req.url)
   const cacheURL = new URL(options?.path || pathname, origin)
   const cacheKey = cacheURL.toString()
-  return { res: await cache.match(cacheKey), key: cacheKey, store: cache }
+  return {
+    res: await cache.match(cacheKey),
+    key: cacheKey,
+    store: cache,
+  }
 }

@@ -44,7 +44,7 @@ app.get('/sticker/:name', async (ctx) => {
       })
     }
 
-    ctx.executionCtx.waitUntil(store.put(key, res))
+    ctx.executionCtx.waitUntil(store.put(key, res.clone()))
   } else {
     console.log('cache hit')
   }
@@ -140,8 +140,7 @@ app.get('/sticker/:character/:sticker', async (ctx) => {
         'Cache-Control': 's-maxage=3600',
       })
     }
-
-    ctx.executionCtx.waitUntil(store.put(key, res))
+    ctx.executionCtx.waitUntil(store.put(key, res.clone()))
   } else {
     console.log('cache hit')
   }
