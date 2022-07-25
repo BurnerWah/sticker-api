@@ -2,7 +2,7 @@ interface PackMetadata {
   nsfwStickers?: string[]
 }
 
-export interface Env {
+interface Env {
   NAME_ALIASES: KVNamespace<string>
   STICKER_ALIASES: KVNamespace<string>
   PACK_METADATA: KVNamespace
