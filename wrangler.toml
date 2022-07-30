@@ -21,3 +21,6 @@ preview_id = "b22b923745e047a78c3846c1f439fe34"
 binding = "PACK_METADATA"
 id = "2404d7bc91cf4e78a1cc2a5b7665c4a7"
 preview_id = "2404d7bc91cf4e78a1cc2a5b7665c4a7"
+
+# [secrets]
+# SENTRY_DSN

@@ -7,4 +7,5 @@ interface Env {
   STICKER_ALIASES: KVNamespace<string>
   PACK_METADATA: KVNamespace
   STICKERS_R2: R2Bucket
+  SENTRY_DSN: string
 }
