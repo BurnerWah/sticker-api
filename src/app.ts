@@ -3,6 +3,9 @@ import { cors } from 'hono/cors'
 import { etag } from 'hono/etag'
 import { logger } from 'hono/logger'
 import { prettyJSON } from 'hono/pretty-json'
+import sharp from 'sharp'
+import UAs from './data/ua.json'
+import { CommonHeaders } from './static'
 import { Bindings, PackMetadata } from './types'
 import { cacheMatch } from './utils'
 
@@ -34,11 +37,7 @@ app.get('/sticker/:name', async (ctx) => {
 
     const image = await ctx.env.STICKERS_R2.get(`${character}:${sticker}.webp`)
     if (image) {
-      res = ctx.body(image.body, 200, {
-        'Content-Type': 'image/webp',
-        // We cache hits for a year because for all intents and purposes, the sticker
-        'Cache-Control': 'public, max-age=31536000, s-maxage=604800',
-      })
+      res = ctx.body(image.body, 200, CommonHeaders)
     } else {
       res = ctx.text('Not found', 404, {
         'Cache-Control': 's-maxage=3600',
@@ -112,7 +111,14 @@ app.get('/sticker/:character/list', async (ctx) => {
 })
 
 app.get('/sticker/:character/:sticker', async (ctx) => {
-  const cache = await cacheMatch(ctx)
+  const ua = ctx.req.header('User-Agent')
+  let { pathname } = new URL(ctx.req.url)
+  if (UAs.discordbot.includes(ua)) {
+    console.log('Discord bot detected, resizing to 150x150')
+    pathname = `${pathname}?size=150`
+  }
+
+  const cache = await cacheMatch(ctx, { path: pathname })
   let { res } = cache
   const { key, store } = cache
   // let res = await cacheMatch(ctx)
@@ -131,11 +137,14 @@ app.get('/sticker/:character/:sticker', async (ctx) => {
 
     const image = await STICKERS_R2.get(`${character}:${sticker}.webp`)
     if (image) {
-      res = ctx.body(image.body, 200, {
-        'Content-Type': 'image/webp',
-        // We cache hits for a year because for all intents and purposes, the sticker is static
-        'Cache-Control': 'public, max-age=31536000, s-maxage=604800',
-      })
+      // resize to 150x150 if Discord bot
+      if (UAs.discordbot.includes(ua)) {
+        const buffer = Buffer.from(await image.arrayBuffer())
+        const resized = await sharp(buffer).resize(150, 150).webp().toBuffer()
+        res = ctx.body(resized, 200, CommonHeaders)
+      } else {
+        res = ctx.body(image.body, 200, CommonHeaders)
+      }
     } else {
       res = ctx.text('Not found', 404, {
         'Cache-Control': 's-maxage=3600',

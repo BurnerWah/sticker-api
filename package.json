@@ -12,11 +12,13 @@
   "private": true,
   "dependencies": {
     "hono": "^2.0.6",
+    "sharp": "^0.30.7",
     "toucan-js": "^2.6.1"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.1",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
+    "@types/sharp": "^0.30.4",
     "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.32.0",
     "concurrently": "^7.3.0",
