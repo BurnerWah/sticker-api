@@ -1,23 +1,28 @@
 import Toucan from 'toucan-js'
 import app from './app'
+import { Bindings, InitialEnv } from './types'
 
 export default {
   fetch(
     request: Request,
-    env: Env,
+    env: InitialEnv,
     ctx: ExecutionContext,
   ): Promise<Response> | Response {
-    const sentry = new Toucan({
+    const SENTRY = new Toucan({
       dsn: env.SENTRY_DSN,
       context: ctx,
       request: request,
       allowedHeaders: ['User-Agent'],
       allowedSearchParams: /(.*)/,
     })
+    const bindings: Bindings = {
+      SENTRY: SENTRY,
+      ...env,
+    }
     try {
-      return app.fetch(request, env, ctx)
+      return app.fetch(request, bindings, ctx)
     } catch (err) {
-      sentry.captureException(err)
+      SENTRY.captureException(err)
       return new Response('Something went wrong', {
         status: 500,
         statusText: 'Internal Server Error',

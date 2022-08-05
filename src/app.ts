@@ -3,9 +3,10 @@ import { cors } from 'hono/cors'
 import { etag } from 'hono/etag'
 import { logger } from 'hono/logger'
 import { prettyJSON } from 'hono/pretty-json'
+import { Bindings, PackMetadata } from './types'
 import { cacheMatch } from './utils'
 
-const app = new Hono<Env>()
+const app = new Hono<Bindings>()
 
 app.use('*', etag(), logger(), prettyJSON(), cors({ origin: '*' }))
 
