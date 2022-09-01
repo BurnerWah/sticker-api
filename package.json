@@ -11,7 +11,7 @@
   },
   "private": true,
   "dependencies": {
-    "hono": "^2.0.9",
+    "hono": "^2.1.3",
     "toucan-js": "^2.6.1"
   },
   "devDependencies": {
