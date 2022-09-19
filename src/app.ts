@@ -1,14 +1,14 @@
+import { sentry } from '@honojs/sentry'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { etag } from 'hono/etag'
 import { logger } from 'hono/logger'
 import { prettyJSON } from 'hono/pretty-json'
-import { Bindings, PackMetadata } from './types'
 import { cacheMatch } from './utils'
 
-const app = new Hono<Bindings>()
+const app = new Hono<{ Bindings: Bindings }>()
 
-app.use('*', etag(), logger(), prettyJSON(), cors({ origin: '*' }))
+app.use('*', etag(), logger(), prettyJSON(), cors({ origin: '*' }), sentry())
 
 // // Special API route to assist with site-level support
 app.use(

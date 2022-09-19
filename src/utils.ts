@@ -1,12 +1,11 @@
 import { Context } from 'hono'
-import { Bindings } from './types'
 
 export function CACHE() {
   return caches.open('sticker-api:cache')
 }
 
 export async function cacheMatch<T extends string>(
-  ctx: Context<T, Bindings>,
+  ctx: Context<T, { Bindings: Bindings }>,
   options?: {
     path?: string
   },

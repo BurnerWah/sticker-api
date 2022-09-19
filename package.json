@@ -11,8 +11,8 @@
   },
   "private": true,
   "dependencies": {
-    "hono": "^2.0.9",
-    "toucan-js": "^2.6.1"
+    "@honojs/sentry": "^0.0.2",
+    "hono": "^2.1.4"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.1",
