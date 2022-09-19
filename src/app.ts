@@ -10,49 +10,6 @@ const app = new Hono<{ Bindings: Bindings }>()
 
 app.use('*', etag(), logger(), prettyJSON(), cors({ origin: '*' }), sentry())
 
-// // Special API route to assist with site-level support
-app.use(
-  '/sticker/:name',
-  cors({
-    origin: '*',
-    allowHeaders: ['X-Sticker-Character'],
-    allowMethods: ['GET', 'HEAD'],
-  }),
-)
-app.get('/sticker/:name', async (ctx) => {
-  const character = ctx.req.header('X-Sticker-Character')
-  const { name } = ctx.req.param()
-
-  const cache = await cacheMatch(ctx, { path: `/sticker/${character}/${name}` })
-  let { res } = cache
-  const { key, store } = cache
-
-  if (!res) {
-    const sticker = await ctx.env.STICKER_ALIASES.get(
-      `${character}:${name}`,
-    ).then((alias: string | null) => alias || name)
-
-    const image = await ctx.env.STICKERS_R2.get(`${character}:${sticker}.webp`)
-    if (image) {
-      res = ctx.body(image.body, 200, {
-        'Content-Type': 'image/webp',
-        // We cache hits for a year because for all intents and purposes, the sticker
-        'Cache-Control': 'public, max-age=31536000, s-maxage=604800',
-      })
-    } else {
-      res = ctx.text('Not found', 404, {
-        'Cache-Control': 's-maxage=3600',
-      })
-    }
-
-    ctx.executionCtx.waitUntil(store.put(key, res.clone()))
-  } else {
-    console.log('cache hit')
-  }
-
-  return res
-})
-
 app.get('/sticker/:character/details', async (ctx) => {
   const { NAME_ALIASES, PACK_METADATA, STICKERS_R2 } = ctx.env
 
