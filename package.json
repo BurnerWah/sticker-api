@@ -11,7 +11,7 @@
   },
   "private": true,
   "dependencies": {
-    "@honojs/sentry": "^0.0.2",
+    "@honojs/sentry": "^0.0.3",
     "hono": "^2.1.4"
   },
   "devDependencies": {
