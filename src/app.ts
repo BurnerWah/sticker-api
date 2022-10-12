@@ -1,10 +1,10 @@
 import { sentry } from '@honojs/sentry'
 import { Hono } from 'hono'
+import { cache } from 'hono/cache'
 import { cors } from 'hono/cors'
 import { etag } from 'hono/etag'
 import { logger } from 'hono/logger'
 import { prettyJSON } from 'hono/pretty-json'
-import { cacheMatch } from './utils'
 
 const app = new Hono<{ Bindings: Bindings }>()
 
@@ -68,42 +68,31 @@ app.get('/sticker/:character/list', async (ctx) => {
   })
 })
 
-app.get('/sticker/:character/:sticker', async (ctx) => {
-  const cache = await cacheMatch(ctx)
-  let { res } = cache
-  const { key, store } = cache
-  // let res = await cacheMatch(ctx)
-  if (!res) {
-    console.log('cache miss')
-
+app.get(
+  '/sticker/:character/:sticker',
+  cache({ cacheName: 'sticker-api:stickers' }),
+  async (ctx) => {
     const { NAME_ALIASES, STICKER_ALIASES, STICKERS_R2 } = ctx.env
 
     let { character, sticker } = ctx.req.param()
 
-    character = await NAME_ALIASES.get(character).then((a) => a || character)
+    character = (await NAME_ALIASES.get(character)) || character
 
-    sticker = await STICKER_ALIASES.get(`${character}:${sticker}`).then(
-      (a) => a || sticker,
-    )
+    sticker = (await STICKER_ALIASES.get(`${character}:${sticker}`)) || sticker
 
     const image = await STICKERS_R2.get(`${character}:${sticker}.webp`)
     if (image) {
-      res = ctx.body(image.body, 200, {
+      return ctx.body(image.body, 200, {
         'Content-Type': 'image/webp',
         // We cache hits for a year because for all intents and purposes, the sticker is static
         'Cache-Control': 'public, max-age=31536000, s-maxage=604800',
       })
     } else {
-      res = ctx.text('Not found', 404, {
+      return ctx.text('Not found', 404, {
         'Cache-Control': 's-maxage=3600',
       })
     }
-    ctx.executionCtx.waitUntil(store.put(key, res.clone()))
-  } else {
-    console.log('cache hit')
-  }
-
-  return res
-})
+  },
+)
 
 export default app
