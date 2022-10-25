@@ -2,11 +2,20 @@ name: ESLint
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    paths:
+      - .github/workflows/eslint.yml
+      - package*.json
+      - tsconfig*.json
+      - '**/.eslint*'
+      - '**/eslint.config.*'
+      - '**/.prettier*' # Prettier config files
+      - '**/prettier.config.*' # JS prettier config files
+      - '**/*.editorconfig' # Used by prettier
+      - '**/*.[cm]?jsx?'
+      - '**/*.tsx?'
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   eslint:

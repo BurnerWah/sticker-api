@@ -2,8 +2,13 @@ name: Deploy
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    paths:
+      - .github/workflows/wrangler.yml
+      - package*.json
+      - src/**
+      - tsconfig*.json
+      - wrangler.toml
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:
