@@ -101,11 +101,10 @@ app.get(
         // We cache hits for a year because for all intents and purposes, the sticker is static
         'Cache-Control': 'public, max-age=31536000, s-maxage=604800',
       })
-    } else {
-      return ctx.text('Not found', 404, {
-        'Cache-Control': 's-maxage=3600',
-      })
     }
+    return ctx.text('Not found', 404, {
+      'Cache-Control': 's-maxage=3600',
+    })
   },
 )
 
