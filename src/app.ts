@@ -84,7 +84,7 @@ app.get(
 
 app.get(
   '/sticker/:character/:sticker',
-  cache({ cacheName: 'sticker-api:stickers' }),
+  // cache({ cacheName: 'sticker-api:stickers' }),
   async (ctx) => {
     const { NAME_ALIASES, STICKER_ALIASES, STICKERS_R2 } = ctx.env
 
