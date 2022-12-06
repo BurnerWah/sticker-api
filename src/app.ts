@@ -96,10 +96,13 @@ app.get(
 
     const image = await STICKERS_R2.get(`${character}:${sticker}.webp`)
     if (image) {
-      return ctx.body(image.body, 200, {
-        'Content-Type': 'image/webp',
-        // We cache hits for a year because for all intents and purposes, the sticker is static
-        'Cache-Control': 'public, max-age=31536000, s-maxage=604800',
+      return new Response(image.body, {
+        status: 200,
+        headers: {
+          'Content-Type': 'image/webp',
+          // We cache hits for a year because for all intents and purposes, the sticker is static
+          'Cache-Control': 'public, max-age=31536000, s-maxage=604800',
+        },
       })
     }
     return ctx.text('Not found', 404, {
