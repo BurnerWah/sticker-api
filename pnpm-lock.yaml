@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@cloudflare/workers-types': ^4.0.0
-  '@honojs/sentry': ^0.0.4
+  '@honojs/sentry': ^0.0.5
   '@microsoft/eslint-formatter-sarif': ^3.0.0
   '@typescript-eslint/eslint-plugin': ^5.45.1
   '@typescript-eslint/parser': ^5.45.1
@@ -19,7 +19,7 @@ specifiers:
   wrangler: ^2.6.0
 
 dependencies:
-  '@honojs/sentry': 0.0.4_hono@2.5.8
+  '@honojs/sentry': 0.0.5_hono@2.5.8
   hono: 2.5.8
 
 devDependencies:
@@ -85,8 +85,8 @@ packages:
       - supports-color
     dev: true
 
-  /@honojs/sentry/0.0.4_hono@2.5.8:
-    resolution: {integrity: sha512-XUpoqh9dHgAysaanjCVKZGCCZn1gU1Pn7rPifgIfjhE3qWlGWUUXMTS9kkT01B6O6jDyK1DtRD2F6mwb6cXyng==}
+  /@honojs/sentry/0.0.5_hono@2.5.8:
+    resolution: {integrity: sha512-U28ADTMvDNfeuVghGz2gwae52DFhMuhzZ/E227I2IrT6TXrroUMRfCGYgKrn1oHts7qSmemubHuULkv2EqC54g==}
     peerDependencies:
       hono: ^2.6.1
     dependencies:
