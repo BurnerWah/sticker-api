@@ -3,10 +3,10 @@ lockfileVersion: '6.0'
 dependencies:
   '@honojs/sentry':
     specifier: ^0.0.5
-    version: 0.0.5(hono@2.5.8)
+    version: 0.0.5(hono@3.0.0)
   hono:
-    specifier: ^2.5.8
-    version: 2.5.8
+    specifier: ^3.0.0
+    version: 3.0.0
 
 devDependencies:
   '@cloudflare/workers-types':
@@ -99,12 +99,12 @@ packages:
       - supports-color
     dev: true
 
-  /@honojs/sentry@0.0.5(hono@2.5.8):
+  /@honojs/sentry@0.0.5(hono@3.0.0):
     resolution: {integrity: sha512-U28ADTMvDNfeuVghGz2gwae52DFhMuhzZ/E227I2IrT6TXrroUMRfCGYgKrn1oHts7qSmemubHuULkv2EqC54g==}
     peerDependencies:
       hono: ^2.6.1
     dependencies:
-      hono: 2.5.8
+      hono: 3.0.0
       toucan-js: 2.7.0
     dev: false
 
@@ -1328,8 +1328,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /hono@2.5.8:
-    resolution: {integrity: sha512-OYP+O31QfsEL7U7dXW9+GtuT+7gtfsvkyKAI/w3aujzxq5M1kYVXMEOiKFA9iwkjf2uVsUAIxf9aRhCJ7LTJaw==}
+  /hono@3.0.0:
+    resolution: {integrity: sha512-OBWEvcRydCOLdOiazqOmKy8PXciR8uIyUM9HpmXot7UmwNBGOdEJvTrVRIgjV603w+go6cTXBOvFiQClSABT6Q==}
     engines: {node: '>=16.0.0'}
     dev: false
 
