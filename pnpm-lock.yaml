@@ -2,8 +2,8 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@honojs/sentry':
-    specifier: ^0.0.5
-    version: 0.0.5(hono@2.5.8)
+    specifier: ^0.0.6
+    version: 0.0.6(hono@2.5.8)
   hono:
     specifier: ^2.5.8
     version: 2.5.8
@@ -99,8 +99,9 @@ packages:
       - supports-color
     dev: true
 
-  /@honojs/sentry@0.0.5(hono@2.5.8):
-    resolution: {integrity: sha512-U28ADTMvDNfeuVghGz2gwae52DFhMuhzZ/E227I2IrT6TXrroUMRfCGYgKrn1oHts7qSmemubHuULkv2EqC54g==}
+  /@honojs/sentry@0.0.6(hono@2.5.8):
+    resolution: {integrity: sha512-gjnAEvbHxVDScXd/hxlxY5ye3XHXluNZ7VX/i3g2Vmi3pavd/4+VtQJG1VjI3cqahUhk12OpPyDmuIYZfP68hQ==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       hono: ^2.6.1
     dependencies:
